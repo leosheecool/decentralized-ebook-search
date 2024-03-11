@@ -1,6 +1,6 @@
 # Building An Open Source Decentralized E-Book Search Engine
 
-Recently, I was recommended an interesting website called [Liber3](https://liber3.eth.limo/) by a friend, which uses [ENS](https://ens.domains/) domain names. They have created an e-book search website running on ENS and [IPFS](https://ipfs.tech/). Then, I conducted some analysis on their network requests and found that they appear to be using [Glitter](https://glitterprotocol.io/), a decentralized database service built with [Tendermint](https://tendermint.com/).
+Recently, I was recommended an ebook search website called [Liber3](https://liber3.eth.limo/) by a friend, which uses [ENS](https://ens.domains/) domain names. They have created an e-book search website running on ENS and [IPFS](https://ipfs.tech/). Then, I conducted some analysis on their network requests and found that they appear to be using [Glitter](https://glitterprotocol.io/), a decentralized database service built with [Tendermint](https://tendermint.com/).
 
 Unfortunately, because [Liber3](https://liber3.eth.limo/) has not made their source code available, after reviewing Glitter's documentation and open datasets stored on it, I decided to implement an open-source community version myself. This way, everyone can create their own e-book search website.
 
