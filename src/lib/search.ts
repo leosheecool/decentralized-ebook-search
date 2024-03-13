@@ -29,23 +29,53 @@ const highlight = (fields: string[]) => {
   return `/*+ SET_VAR(full_text_option='{"highlight":{ "style":"html","fields":[${fieldsStr}]}}') */`;
 };
 
-const assembleSql = (libraryColumns: string, libraryTable: string) => {
+const formatLanguage = (language: string) => {
+  return `and (language="${language}" or language="${
+    language.charAt(0).toUpperCase() + language.slice(1)
+  }")`;
+};
+
+const assembleSql = (
+  libraryColumns: string,
+  libraryTable: string,
+  offset: number,
+  language?: string | null
+) => {
   const highlightStr = highlight(["title", "author"]);
-  return `select ${highlightStr} ${libraryColumns} from ${libraryTable} where query_string(?) limit 0, 200`;
+
+  const languageQuery =
+    !language || language === "all" ? "" : formatLanguage(language);
+
+  return {
+    results: `select ${highlightStr} ${libraryColumns} from ${libraryTable} where query_string(?) ${languageQuery} limit 200 offset ${offset} `,
+    count: `select count(*) from ${libraryTable} where query_string(?) ${languageQuery}`,
+  };
 };
 
 export const searchBooks = async (
-  query: string,
+  query: { text: string; offset: number; language: string | null },
   libraryColumns: string,
   libraryTable: string,
   dbClient: Db
-): Promise<IBookItem[]> => {
+): Promise<{ data: IBookItem[]; count: number }> => {
   const queries = [];
-  queries.push(new MatchPhraseQuery("title", `${query}`));
+  queries.push(new MatchPhraseQuery("title", `${query.text}`));
   const sqlString = queryStringPrepare(queries);
 
-  const sql = assembleSql(libraryColumns, libraryTable);
-  const newSql = prepareSQL(sql, sqlString);
-  const sqlData = await dbClient.query(newSql);
-  return processDataModal(sqlData?.result || []);
+  const sql = assembleSql(
+    libraryColumns,
+    libraryTable,
+    query.offset,
+    query.language
+  );
+  const result = {
+    query: prepareSQL(sql.results, sqlString),
+    count: prepareSQL(sql.count, sqlString),
+  };
+  const results = await dbClient.query(result.query);
+  const count = await dbClient.query(result.count);
+  return {
+    data: processDataModal(results?.result || []),
+    count: count?.result[0].row["COUNT(*)"].value,
+  };
 };
