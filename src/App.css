@@ -12,7 +12,6 @@
 }
 
 .form-control {
-  flex-grow: 1;
   height: 20px;
   padding: 10px;
   border: 1px solid #ced4da;
@@ -32,11 +31,21 @@
 }
 
 .list-group-item {
+  display: block;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.1);
+  color: black;
+  text-decoration: none;
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 10px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
 }
 
 .list-group-item h5 {
@@ -49,14 +58,18 @@
   font-size: 14px;
 }
 
-h5 mark{
+h5 mark {
   color: red;
   background: none;
 }
-p{
+p {
   display: flex;
   justify-content: flex-start;
 }
-p span{
+p span {
   flex: 1;
+}
+
+.form-input {
+  flex-grow: 1;
 }
