@@ -1,5 +1,3 @@
-import SelectorItem from "./SelectorItem/SelectorItem";
-
 const Selector = () => {
   return (
     <div>
